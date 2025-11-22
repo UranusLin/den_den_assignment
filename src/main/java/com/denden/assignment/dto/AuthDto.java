@@ -35,4 +35,14 @@ public class AuthDto {
         @NotBlank
         private String code;
     }
+
+    @Data
+    public static class LoginResponse {
+        private String token;
+        private String tokenType = "Bearer";
+
+        public LoginResponse(String token) {
+            this.token = token;
+        }
+    }
 }

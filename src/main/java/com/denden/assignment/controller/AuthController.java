@@ -20,29 +20,29 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "註冊新會員")
-    public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody AuthDto.RegisterRequest request) {
+    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody AuthDto.RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok(ApiResponse.success("Registration successful. Please check your email to activate account.", null));
     }
 
     @GetMapping("/activate")
     @Operation(summary = "啟用帳號 (透過 Token)")
-    public ResponseEntity<ApiResponse<String>> activate(@RequestParam String token) {
+    public ResponseEntity<ApiResponse<Void>> activate(@RequestParam String token) {
         authService.activateAccount(token);
         return ResponseEntity.ok(ApiResponse.success("Account activated successfully. You can now login.", null));
     }
 
     @PostMapping("/login")
     @Operation(summary = "登入 (第一步): 驗證帳密並發送 2FA 驗證碼")
-    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody AuthDto.LoginRequest request) {
+    public ResponseEntity<ApiResponse<Void>> login(@Valid @RequestBody AuthDto.LoginRequest request) {
         authService.login(request);
         return ResponseEntity.ok(ApiResponse.success("Credentials valid. 2FA code sent to your email.", null));
     }
 
     @PostMapping("/login/verify")
     @Operation(summary = "登入 (第二步): 驗證 2FA 驗證碼")
-    public ResponseEntity<ApiResponse<String>> verify2FA(@Valid @RequestBody AuthDto.Verify2FARequest request) {
+    public ResponseEntity<ApiResponse<AuthDto.LoginResponse>> verify2FA(@Valid @RequestBody AuthDto.Verify2FARequest request) {
         String token = authService.verify2FA(request);
-        return ResponseEntity.ok(ApiResponse.success("Login successful", token));
+        return ResponseEntity.ok(ApiResponse.success("Login successful", new AuthDto.LoginResponse(token)));
     }
 }
