@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: den-den-assignment
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+mailjet:
+  api-key: ${MAILJET_API_KEY:mock-key}
+  secret-key: ${MAILJET_SECRET_KEY:mock-secret}
+  sender-email: ${MAILJET_SENDER_EMAIL:test@example.com}
+
+brevo:
+  api-key: ${BREVO_API_KEY:mock-key}
+  sender-email: ${BREVO_SENDER_EMAIL:test@example.com}
+
+app:
+  email:
+    provider: ${EMAIL_PROVIDER:mock} # Options: mock, mailjet, brevo
+
+logging:
+  level:
+    org.springframework.web: INFO
+    com.denden.assignment: DEBUG
