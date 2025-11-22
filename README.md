@@ -89,7 +89,7 @@ cp .env.example .env
 
 ### 第一部分：互動流程圖設計 (OCPI 2.2.1)
 
-位於 `doc/diagram.md`。
+位於 [doc/diagram.md](doc/diagram.md)。
 - **內容**: 繪製 User 透過 SCSP 呼叫 EMSP 啟動 CPO 充電樁的時序圖 (Sequence Diagram)。
 - **情境**: 涵蓋 Start Session, Stop Session, CDR (充電紀錄) 回傳與帳單通知流程。
 
