@@ -7,6 +7,7 @@ import com.denden.assignment.repository.UserRepository;
 import com.denden.assignment.service.AuthService;
 import com.denden.assignment.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,9 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     @Override
     @Transactional
     public void register(AuthDto.RegisterRequest request) {
@@ -38,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        String activationLink = "http://localhost:8080/api/auth/activate?token=" + user.getActivationToken();
+        String activationLink = baseUrl + "/api/auth/activate?token=" + user.getActivationToken();
         emailService.sendActivationEmail(user.getEmail(), activationLink);
     }
 

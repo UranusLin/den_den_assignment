@@ -26,6 +26,7 @@ brevo:
   sender-email: ${BREVO_SENDER_EMAIL:test@example.com}
 
 app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
   email:
     provider: ${EMAIL_PROVIDER:mock} # Options: mock, mailjet, brevo
 
