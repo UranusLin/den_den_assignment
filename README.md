@@ -109,6 +109,35 @@ API 文件位於：[http://localhost:8080/swagger-ui.html](http://localhost:8080
 4.  **查詢系統 (User Query)**
     - 查詢登入使用者的最後登入時間 (`lastLoginTime`)。
 
+## 架構與設計 (Architecture & Design)
+
+本專案採用 **Clean Architecture** 與 **SOLID** 原則進行設計，確保程式碼的可維護性與擴充性。
+
+### 1. 分層架構 (Layered Architecture)
+- **Controller Layer**: 處理 HTTP 請求與回應，使用 `ApiResponse<T>` 統一回傳格式。
+- **Service Layer**: 包含核心業務邏輯 (如 2FA 流程、Token 驗證)。
+- **Repository Layer**: 資料存取層 (使用 Spring Data JPA)。
+- **DTO (Data Transfer Object)**: 定義 API 輸入輸出格式，避免直接暴露 Entity。
+
+### 2. 設計模式與實踐 (Design Patterns & Practices)
+- **Strategy Pattern**: 透過 `EmailService` 介面與多個實作 (`Mock`, `Mailjet`, `Brevo`)，實現可抽換的 Email 服務策略。
+- **Global Exception Handling**: 使用 `@RestControllerAdvice` 與自定義 `AppException`，統一處理錯誤並回傳標準化的錯誤訊息。
+- **Secure by Design**:
+  - 使用 `BCrypt` 進行密碼雜湊。
+  - 使用 `SecureRandom` 產生高強度 2FA 驗證碼。
+  - 實作 `AuthInterceptor` 攔截器，確保只有驗證通過的請求能存取受保護資源。
+
+### 3. 可觀測性 (Observability)
+- **Logging**: 採用 Logback 進行日誌管理。
+  - **Rolling Policy**: 每日自動滾動日誌檔案 (`application-yyyy-MM-dd.log`)。
+  - **Error Isolation**: 獨立的 `error.log` 檔案，便於快速定位嚴重錯誤。
+  - **Retention**: 自動清理 30 天前的日誌，避免磁碟空間耗盡。
+
+### 4. 部署與維運 (DevOps)
+- **Dockerization**: 提供 Multi-stage Dockerfile，優化映像檔大小與安全性。
+- **Configuration Management**: 支援 `.env` 與環境變數注入，實現 **12-Factor App** 的配置原則。
+- **Makefile**: 封裝常用指令，簡化開發與部署流程。
+
 ## 測試 (Testing)
 
 專案包含完整的測試覆蓋：
@@ -120,3 +149,11 @@ API 文件位於：[http://localhost:8080/swagger-ui.html](http://localhost:8080
 ```bash
 make test
 ```
+
+## 部署與測試資源 (Deployment & Resources)
+
+本專案已部署至 **Zeabur**，可直接進行線上測試：
+
+- **線上網址**: [https://den-den-assignment.zeabur.app](https://den-den-assignment.zeabur.app)
+- **Swagger UI**: [https://den-den-assignment.zeabur.app/swagger-ui/index.html](https://den-den-assignment.zeabur.app/swagger-ui/index.html)
+- **Postman Collection**: 位於 [doc/DenDen Assignment API.postman_collection.json](doc/DenDen%20Assignment%20API.postman_collection.json)，可直接匯入 Postman 進行測試。
